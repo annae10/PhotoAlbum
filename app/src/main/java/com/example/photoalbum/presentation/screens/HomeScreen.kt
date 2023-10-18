@@ -52,7 +52,7 @@ fun HomeScreen(
             title = "Home",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            hasNews = true,
+            hasNews = false,
         ),
         BottomNavigationItem(
             title = "Add",
@@ -77,6 +77,9 @@ fun HomeScreen(
             if(selectedItemIndex==1){
                 CameraScreen()
             }
+            if(selectedItemIndex==1){
+                ProfileScreen()
+            }
         },
 
         bottomBar= {
@@ -94,7 +97,7 @@ fun HomeScreen(
                         icon = {
                             BadgedBox(
                                 badge = {
-                                    if (item.badgeCount != null) {
+                                    if (item.badgeCount != 0) {
                                         Badge {
                                             Text(text = item.badgeCount.toString())
                                         }

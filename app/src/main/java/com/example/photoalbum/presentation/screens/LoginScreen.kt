@@ -49,7 +49,7 @@ fun LoginScreen(navController: NavHostController
         verticalArrangement = Arrangement.Center
     ){
         Text(
-            text = "Login Screen",
+            text = "PhotoAlbum",
             fontSize = 30.sp
         )
         Spacer(modifier = Modifier.height(30.dp))
