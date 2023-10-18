@@ -22,10 +22,11 @@ class SQLitePhotosRepository (
     private val reconstructFlow = MutableSharedFlow<Unit>(replay = 1).also { it.tryEmit(Unit) }
 
     override suspend fun getPhotos(onlyActive: Boolean): Flow<List<Photo>> {
-        return combine(usersRepository.getUser(), reconstructFlow) { user, _ ->
-            queryPhotos(onlyActive, user?.id)
-        }
-            .flowOn(ioDispatcher)
+//        return combine(usersRepository.getUser(), reconstructFlow) { user, _ ->
+//            queryPhotos(onlyActive, user?.id)
+//        }
+//            .flowOn(ioDispatcher)
+        TODO()
     }
 
     override suspend fun makePhoto() {
@@ -43,9 +44,9 @@ class SQLitePhotosRepository (
     }
 
     private suspend fun setActiveFlagForPhoto(photo: Photo, isActive: Boolean) {
-        val user = usersRepository.getUser().first() ?: throw AuthException()
-        saveActiveFlag(user.id, photo.id, isActive)
-        reconstructFlow.tryEmit(Unit)
+//        val user = usersRepository.getUser().first() ?: throw AuthException()
+//        saveActiveFlag(user.id, photo.id, isActive)
+//        reconstructFlow.tryEmit(Unit)
     }
 
     private fun queryPhotos(onlyActive: Boolean, userId: Long?): List<Photo> {

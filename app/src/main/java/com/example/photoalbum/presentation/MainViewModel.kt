@@ -2,11 +2,24 @@ package com.example.photoalbum.presentation
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.photoalbum.data.users.SQLiteUsersRepository
 import com.example.photoalbum.data.users.UsersRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
-    private val usersRepository: UsersRepository
+//@HiltViewModel
+class MainViewModel //@Inject constructor
+    (
+    private val repository: UsersRepository
 ) : ViewModel() {
+
+    fun login(){
+        viewModelScope.launch {
+            repository.signIn("","")
+        }
+    }
 
     private var _is_signed = false
     val is_signed

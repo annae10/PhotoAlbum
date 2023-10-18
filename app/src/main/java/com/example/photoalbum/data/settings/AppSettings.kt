@@ -1,5 +1,8 @@
 package com.example.photoalbum.data.settings
 
+import com.example.photoalbum.presentation.screens.LoginModule
+import dagger.Component
+
 interface AppSettings {
 
     fun getCurrentUserId(): Long

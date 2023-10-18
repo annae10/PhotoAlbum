@@ -17,6 +17,7 @@ import com.example.photoalbum.presentation.theme.PhotoAlbumTheme
 import com.example.photoalbum.presentation.navigation.SetupNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import android.Manifest
+import android.content.Context
 import com.example.photoalbum.data.Repositories
 
 @ExperimentalPagingApi
@@ -26,12 +27,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Repositories.init(applicationContext)
+        val myContext: Context = this
         setContent {
 
             PhotoAlbumTheme {
                 val navController = rememberNavController()
 
-                SetupNavGraph(navController = navController)
+                SetupNavGraph(navController = navController, myContext)
             }
         }
     }

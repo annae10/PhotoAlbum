@@ -1,5 +1,6 @@
 package com.example.photoalbum.presentation.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -17,7 +18,7 @@ import com.example.photoalbum.presentation.screens.LoginScreen
 @ExperimentalCoilApi
 @ExperimentalPagingApi
 @Composable
-fun SetupNavGraph(navController: NavHostController) {
+fun SetupNavGraph(navController: NavHostController, myContext: Context) {
 
     NavHost(
         navController = navController,

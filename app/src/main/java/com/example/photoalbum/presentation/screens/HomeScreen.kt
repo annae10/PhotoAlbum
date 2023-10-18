@@ -21,15 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
-import com.example.photoalbum.presentation.BottomNavigationItem
 import com.example.photoalbum.presentation.camera.CameraScreen
-import com.example.photoalbum.presentation.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,6 +46,28 @@ fun HomeScreen(
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
+
+    val items = listOf(
+        BottomNavigationItem(
+            title = "Home",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
+            hasNews = true,
+        ),
+        BottomNavigationItem(
+            title = "Add",
+            selectedIcon = Icons.Filled.Add,
+            unselectedIcon = Icons.Outlined.Add,
+            hasNews = false,
+        ),
+        BottomNavigationItem(
+            title = "Person",
+            selectedIcon = Icons.Filled.Person,
+            unselectedIcon = Icons.Outlined.Person,
+            hasNews = false,
+        )
+    )
+
     Scaffold(
         content = {
 
@@ -97,3 +118,12 @@ fun HomeScreen(
 }
     )
 }
+
+
+data class BottomNavigationItem(
+    val title:String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val hasNews: Boolean,
+    val badgeCount: Int = 0
+)

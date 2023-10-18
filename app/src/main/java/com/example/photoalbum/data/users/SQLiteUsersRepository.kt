@@ -13,14 +13,20 @@ import com.example.photoalbum.data.sqlite.entities.User
 import com.example.photoalbum.data.sqlite.AppSQLiteContract.UsersTable
 import com.example.photoalbum.data.sqlite.wrapSQLiteException
 import com.example.photoalbum.data.utils.AsyncLoader
+import com.example.photoalbum.presentation.screens.LoginModule
+import dagger.Component
+import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.lang.Exception
+import javax.inject.Inject
 
-class SQLiteUsersRepository (
+class SQLiteUsersRepository //@Inject constructor
+    (
     private val db: SQLiteDatabase,
     private val appSettings: AppSettings,
     private val ioDispatcher: CoroutineDispatcher
@@ -30,57 +36,59 @@ class SQLiteUsersRepository (
         MutableStateFlow(UserId(appSettings.getCurrentUserId()))
     }
 
-    override suspend fun isSignedIn(): Boolean {
-        delay(2000)
-        return appSettings.getCurrentUserId() != AppSettings.NO_ACCOUNT_ID
-    }
+//    override suspend fun isSignedIn(): Boolean {
+//        delay(2000)
+//        return appSettings.getCurrentUserId() != AppSettings.NO_ACCOUNT_ID
+//    }
 
-    override suspend fun signIn(email: String, password: String)
+    override suspend fun signIn (email: String, password: String)
     = wrapSQLiteException(ioDispatcher) {
-        if (email.isBlank()) throw EmptyFieldException(Field.Email)
-        if (password.isBlank()) throw EmptyFieldException(Field.Password)
+        try {
+            if (email.isBlank()) throw EmptyFieldException(Field.Email)
+            if (password.isBlank()) throw EmptyFieldException(Field.Password)
 
-        delay(1000)
+            delay(1000)
 
-        val userId = findUserIdByEmailAndPassword(email, password)
-        appSettings.setCurrentUserId(userId)
+            val userId = findUserIdByEmailAndPassword(email, password)
+            appSettings.setCurrentUserId(userId)
 
-        currentUserIdFlow.get().value = UserId(userId)
+            currentUserIdFlow.get().value = UserId(userId)
+        }catch (e:Exception){
 
-
+        }
         return@wrapSQLiteException
     }
 
-    override suspend fun signUp(signUpData: SignUpData) = wrapSQLiteException(ioDispatcher) {
-        signUpData.validate()
-        delay(1000)
-        createUser(signUpData)
-    }
+//    override suspend fun signUp(signUpData: SignUpData) = wrapSQLiteException(ioDispatcher) {
+//        signUpData.validate()
+//        delay(1000)
+//        createUser(signUpData)
+//    }
+//
+//    override suspend fun logout() {
+//        appSettings.setCurrentUserId(AppSettings.NO_ACCOUNT_ID)
+//        currentUserIdFlow.get().value = UserId(AppSettings.NO_ACCOUNT_ID)
+//    }
 
-    override suspend fun logout() {
-        appSettings.setCurrentUserId(AppSettings.NO_ACCOUNT_ID)
-        currentUserIdFlow.get().value = UserId(AppSettings.NO_ACCOUNT_ID)
-    }
-
-    override suspend fun getUser(): Flow<User?> {
-        return currentUserIdFlow.get()
-            .map { userId ->
-                getUserById(userId.value)
-            }
-            .flowOn(ioDispatcher)
-    }
-
-    override suspend fun updateUserName(newUsername: String) = wrapSQLiteException(ioDispatcher)  {
-        if (newUsername.isBlank()) throw EmptyFieldException(Field.Username)
-        delay(1000)
-        val userId = appSettings.getCurrentUserId()
-        if (userId == AppSettings.NO_ACCOUNT_ID) throw AuthException()
-
-        updateUsernameForAccountId(userId, newUsername)
-
-        currentUserIdFlow.get().value = UserId(userId)
-        return@wrapSQLiteException
-    }
+//    override suspend fun getUser(): Flow<User?> {
+//        return currentUserIdFlow.get()
+//            .map { userId ->
+//                getUserById(userId.value)
+//            }
+//            .flowOn(ioDispatcher)
+//    }
+//
+//    override suspend fun updateUserName(newUsername: String) = wrapSQLiteException(ioDispatcher)  {
+//        if (newUsername.isBlank()) throw EmptyFieldException(Field.Username)
+//        delay(1000)
+//        val userId = appSettings.getCurrentUserId()
+//        if (userId == AppSettings.NO_ACCOUNT_ID) throw AuthException()
+//
+//        updateUsernameForAccountId(userId, newUsername)
+//
+//        currentUserIdFlow.get().value = UserId(userId)
+//        return@wrapSQLiteException
+//    }
 
     private fun findUserIdByEmailAndPassword(email: String, password: String): Long {
         val cursor = db.query(

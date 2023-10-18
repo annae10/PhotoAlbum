@@ -1,5 +1,6 @@
 package com.example.photoalbum.presentation.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,18 +22,24 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.photoalbum.data.users.SQLiteUsersRepository
 import com.example.photoalbum.presentation.RegistrationFormEvent
 import com.example.photoalbum.presentation.navigation.CurrentUserId
 import com.example.photoalbum.presentation.sqlite.SignInViewModel
+import dagger.hilt.android.EarlyEntryPoints.get
+import org.koin.androidx.compose.get
 
 @Composable
-fun LoginScreen(navController: NavHostController,
-                loginViewModel: LoginViewModel = hiltViewModel()
+fun LoginScreen(navController: NavHostController
 ){
     val context = LocalContext.current
     val viewModelSignIn = viewModel<SignInViewModel>()
+
+//    val viewModelFactory = LoginViewModelFactory(repository = SQLiteUsersRepository())
+//    val viewModelSignIn = ViewModelProvider(myContext).get(LoginViewModel::class.java)
 
     val state = viewModelSignIn.state
 
