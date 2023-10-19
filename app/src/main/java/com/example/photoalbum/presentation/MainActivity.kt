@@ -18,11 +18,38 @@ import com.example.photoalbum.presentation.navigation.SetupNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 import android.Manifest
 import android.content.Context
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.example.photoalbum.data.Repositories
+import com.example.photoalbum.data.room.UserDatabase
+import com.example.photoalbum.data.room.UserViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 
 @ExperimentalPagingApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    val db by lazy {
+        Room.databaseBuilder(this, UserDatabase::class.java, "users.db").build()
+    }
+
+    val viewModel by viewModels<UserViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return UserViewModel(db.dao) as T
+                }
+            }
+        }
+    )
+
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     @OptIn(ExperimentalPagingApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +59,28 @@ class MainActivity : ComponentActivity() {
 
             PhotoAlbumTheme {
                 val navController = rememberNavController()
+                val state by viewModel.state.collectAsState()
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-                SetupNavGraph(navController = navController, myContext)
+                fetchLocation()
+                SetupNavGraph(navController = navController, myContext, state, viewModel::onEvent)
+            }
+        }
+    }
+
+    private fun fetchLocation() {
+        val task = fusedLocationProviderClient.lastLocation
+        if (ContextCompat.checkSelfPermission(applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION
+            )!= PackageManager.PERMISSION_GRANTED){
+            return
+        }
+        task.addOnSuccessListener {
+            if(it != null){
+                val latitude = it.latitude
+                val longitude = it.longitude
             }
         }
     }

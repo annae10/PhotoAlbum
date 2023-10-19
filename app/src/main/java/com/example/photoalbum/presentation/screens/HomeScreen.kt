@@ -27,7 +27,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.room.Room
 import coil.annotation.ExperimentalCoilApi
+import com.example.photoalbum.data.room.UserEvent
+import com.example.photoalbum.data.room.UserScreen
+import com.example.photoalbum.data.room.UserState
 import com.example.photoalbum.presentation.camera.CameraScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +41,9 @@ import com.example.photoalbum.presentation.camera.CameraScreen
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-   homeViewModel: HomeViewModel = hiltViewModel()
+    state: UserState,
+    onEvent: (UserEvent)-> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val getAllImages = homeViewModel.getAllImages.collectAsLazyPagingItems()
 
@@ -68,6 +74,8 @@ fun HomeScreen(
         )
     )
 
+
+
     Scaffold(
         content = {
 
@@ -77,13 +85,13 @@ fun HomeScreen(
             if(selectedItemIndex==1){
                 CameraScreen()
             }
-            if(selectedItemIndex==1){
-                ProfileScreen()
+            if(selectedItemIndex==2){
+                UserScreen(state, onEvent)
             }
         },
 
         bottomBar= {
-            if(selectedItemIndex!=1){
+            //if(selectedItemIndex!=1){
             NavigationBar {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -117,7 +125,7 @@ fun HomeScreen(
                     )
                 }
             }
-        }
+        //}
 }
     )
 }

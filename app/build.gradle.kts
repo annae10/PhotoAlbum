@@ -141,4 +141,6 @@ dependencies {
     implementation("io.insert-koin:koin-annotations:1.3.0")
     ksp("io.insert-koin:koin-ksp-compiler:1.3.0")
 
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
 }

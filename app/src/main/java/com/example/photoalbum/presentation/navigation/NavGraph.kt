@@ -11,24 +11,32 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.paging.ExperimentalPagingApi
+import androidx.room.Room
 import coil.annotation.ExperimentalCoilApi
+import com.example.photoalbum.data.room.UserDatabase
+import com.example.photoalbum.data.room.UserEvent
+import com.example.photoalbum.data.room.UserState
+import com.example.photoalbum.data.room.UserViewModel
 import com.example.photoalbum.presentation.screens.HomeScreen
 import com.example.photoalbum.presentation.screens.LoginScreen
 
 @ExperimentalCoilApi
 @ExperimentalPagingApi
 @Composable
-fun SetupNavGraph(navController: NavHostController, myContext: Context) {
+fun SetupNavGraph(navController: NavHostController, myContext: Context, state: UserState,
+                  onEvent: (UserEvent)-> Unit) {
+
+
 
     NavHost(
         navController = navController,
         startDestination = start_dest()
     ) {
         composable(route = Screen.Login.route){
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, onEvent)
         }
         composable(route = Screen.Home.route){
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, state, onEvent)
         }
     }
 }

@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.photoalbum.data.room.UserEvent
 import com.example.photoalbum.data.users.SQLiteUsersRepository
 import com.example.photoalbum.presentation.RegistrationFormEvent
 import com.example.photoalbum.presentation.navigation.CurrentUserId
@@ -33,7 +37,8 @@ import dagger.hilt.android.EarlyEntryPoints.get
 import org.koin.androidx.compose.get
 
 @Composable
-fun LoginScreen(navController: NavHostController
+fun LoginScreen(navController: NavHostController,
+                onEvent: (UserEvent)-> Unit
 ){
     val context = LocalContext.current
     val viewModelSignIn = viewModel<SignInViewModel>()
@@ -95,6 +100,12 @@ fun LoginScreen(navController: NavHostController
             }
         ){
             Text(text = "Sign in")
+        }
+        Button(onClick = { onEvent(UserEvent.ShowDialog)}) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit user"
+            )
         }
     }
 }

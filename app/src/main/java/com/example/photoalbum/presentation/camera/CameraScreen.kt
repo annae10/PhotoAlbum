@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -45,12 +44,12 @@ fun CameraScreen(
         )
     }else listOf(Manifest.permission.CAMERA)
 
-    val permissionState = rememberMultiplePermissionsState(
+    val permissionCameraState = rememberMultiplePermissionsState(
         permissions = permissions)
 
-    if (!permissionState.allPermissionsGranted){
+    if (!permissionCameraState.allPermissionsGranted){
         SideEffect {
-            permissionState.launchMultiplePermissionRequest()
+            permissionCameraState.launchMultiplePermissionRequest()
         }
     }
 
@@ -77,7 +76,7 @@ fun CameraScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        if (permissionState.allPermissionsGranted){
+        if (permissionCameraState.allPermissionsGranted){
             Box(modifier = Modifier
                 .height(screeHeight * 0.85f)
                 .width(screenWidth)) {
@@ -99,7 +98,7 @@ fun CameraScreen(
         ){
             IconButton(
                 onClick = {
-                    if (permissionState.allPermissionsGranted){
+                    if (permissionCameraState.allPermissionsGranted){
                         viewModel.captureAndSave(context)
                     }
                     else{
